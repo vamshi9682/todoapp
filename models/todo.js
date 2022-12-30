@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model , Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     /**
@@ -17,6 +17,71 @@ module.exports = (sequelize, DataTypes) => {
 
     static getTodos() {
       return this.findAll();
+    }
+    
+    static async showList() {
+      console.log("My Todo list \n");
+
+      console.log("Overdue");
+      console.log(
+        (await Todo.overdue())
+          .map((x) => {
+            x.displayableString();
+          })
+          .join("\n")
+      );
+
+      console.log("\n");
+
+      console.log("Due Today");
+      console.log(
+        (await Todo.dueToday())
+          .map((x) => {
+            x.displayableString();
+          })
+          .join("\n")
+      );
+
+      console.log("\n");
+
+      console.log("Due Later");
+      console.log(
+        (await Todo.dueLater())
+          .map((x) => {
+            x.displayableString();
+          })
+          .join("\n")
+      );
+    }
+
+    static async overdue() {
+      return await Todo.findAll({
+        where: {
+          dueDate: { [Op.lt]: new Date().toLocaleDateString("en-CA") },
+          completed: false,
+        },
+        order: [["id","ASC"]],
+      });
+    }
+    
+    static async dueToday() {
+      return await Todo.findAll({
+        where: {
+          dueDate: { [Op.eq]: new Date().toLocaleDateString("en-CA") },
+          completed: false,
+        },
+        order: [["id","ASC"]],
+      });
+    }
+
+    static async dueLater() {
+      return await Todo.findAll({
+        where: {
+          dueDate: { [Op.gt]: new Date().toLocaleDateString("en-CA") },
+          completed: false,
+        },
+        order: [["id","ASC"]],
+      });
     }
 
     static markAsCompleted() {

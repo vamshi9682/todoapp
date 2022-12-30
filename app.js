@@ -10,20 +10,24 @@ const path = require("path");
 app.use(express.static(path.join(__dirname,'public')));
 
 
-app.get("/", async (request, response) => {
-  const allTodos = await Todo.getTodos();
-  if (request.accepts("html")){
-    response.render('index', {
-      allTodos
+app.get("/", async function (request, response) {
+  const overduetodos = await Todo.overdue();
+  const duetodayTodos = await Todo.dueToday();
+  const duelaterTodos = await Todo.dueLater()
+  if (request.accepts("html")) {
+    response.render("index", {
+      overduetodos,
+      duetodayTodos,
+      duelaterTodos,
     });
   } else {
     response.json({
-      allTodos
+      overduetodos,
+      duetodaytodos,
+      duelatertodos,
     });
   }
 });
-
-
 
 app.get("/todos", async function (_request, response) {
   console.log("Processing list of all Todos ...");
