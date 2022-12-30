@@ -12,8 +12,8 @@ app.use(express.static(path.join(__dirname,'public')));
 
 app.get("/", async function (request, response) {
   const overduetodos = await Todo.overdue();
-  const duetodayTodos = await Todo.dueToday();
-  const duelaterTodos = await Todo.dueLater()
+  const duetodayTodos = await Todo.duetoday();
+  const duelaterTodos = await Todo.duelater()
   if (request.accepts("html")) {
     response.render("index", {
       overduetodos,

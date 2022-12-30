@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
     
-    static async dueToday() {
+    static async duetoday() {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.eq]: new Date().toLocaleDateString("en-CA") },
@@ -74,7 +74,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static async dueLater() {
+    static async duelater() {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.gt]: new Date().toLocaleDateString("en-CA") },
