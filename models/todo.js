@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.lt]: new Date().toLocaleDateString("en-CA") },
-          completed: false,
+          completed:false,
         },
         order: [["id","ASC"]],
       });
@@ -68,7 +68,7 @@ module.exports = (sequelize, DataTypes) => {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.eq]: new Date().toLocaleDateString("en-CA") },
-          completed: false,
+          completed:false,
         },
         order: [["id","ASC"]],
       });
@@ -78,21 +78,44 @@ module.exports = (sequelize, DataTypes) => {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.gt]: new Date().toLocaleDateString("en-CA") },
-          completed: false,
+          completed:false,
         },
         order: [["id","ASC"]],
       });
     }
 
-    static markAsCompleted() {
-      return this.update({ completed: true });
+    static async completed() {
+      return this.findAll({
+        where: {
+          completed: true,
+        },
+      });
     }
+    static async remove(id) {
+      return this.destroy({
+        where :{
+          id,
+        },
+      });
+    }
+    setCompletionStatus(completed) {
+      return this.update({ completed : completed } );
+    }
+
   }
   Todo.init(
     {
-      title: DataTypes.STRING,
-      dueDate: DataTypes.DATEONLY,
-      completed: DataTypes.BOOLEAN,
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+     }, dueDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
+    completed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     },
     {
       sequelize,
