@@ -1,7 +1,9 @@
 body{
-    background-color: white;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color:white;
+    font-family: 'Courier New', Courier, monospace;
 }
-.Todo-Item:hover .trash-icon {
-    display: block;
+
+.Todo-Item:hover .trash-icon
+{
+    display:block;
 }
