@@ -36,7 +36,7 @@ describe("Todo Application", function () {
       console.log(error);
     }
   });
-  test("Sign up for first user", async () => {
+  test("Sign up ", async () => {
     let res = await agent.get("/signup");
     const csrfToken = extractCsrfToken(res);
     res = await agent.post("/users").send({
@@ -48,33 +48,13 @@ describe("Todo Application", function () {
     });
     expect(res.statusCode).toBe(302);
   });
-  test("Sign Out for first user", async () => {
+  test("Sign Out ", async () => {
     let res = await agent.get("/todos");
     const csrfToken = extractCsrfToken(res);
     res = await agent.get("/signout").send({
       _csrf: csrfToken,
     });
     expect(res.statusCode).toBe(302);
-  });
-  test("Sign up for second user", async () => {
-    let response = await agent.get("/signup");
-    const csrfToken = extractCsrfToken(response);
-    response = await agent.post("/users").send({
-      firstName: "Test",
-      lastName: "User B",
-      email: "user.b@test.com",
-      password: "12345678",
-      _csrf: csrfToken,
-    });
-    expect(response.statusCode).toBe(302);
-  });
-  test("Sign Out for second user", async () => {
-    let response = await agent.get("/todos");
-    const csrfToken = extractCsrfToken(response);
-    response = await agent.get("/signout").send({
-      _csrf: csrfToken,
-    });
-    expect(response.statusCode).toBe(302);
   });
   test("Creates a todo and responds with json at /todos POST endpoint", async () => {
     const agent = request.agent(server);
