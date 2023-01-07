@@ -176,7 +176,6 @@ app.get("/signout", (request, response, next) => {
     response.redirect("/");
   });
 });
-
 app.post(
   "/session",
   passport.authenticate("local", {
@@ -202,7 +201,6 @@ app.get(
     }
   }
 );
-
 app.post(
   "/todos",
   connectEnsureLogin.ensureLoggedIn(),
@@ -231,7 +229,6 @@ app.post(
     }
   }
 );
-
 app.put(
   "/todos/:id",
   connectEnsureLogin.ensureLoggedIn(),
@@ -248,7 +245,6 @@ app.put(
     }
   }
 );
-
 app.delete(
   "/todos/:id",
   connectEnsureLogin.ensureLoggedIn(),
@@ -262,5 +258,4 @@ app.delete(
     }
   }
 );
-
 module.exports = app;
