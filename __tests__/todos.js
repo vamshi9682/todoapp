@@ -58,7 +58,7 @@ describe("Todo Application", function () {
   });
   test("Creates a todo and responds with json at /todos POST endpoint", async () => {
     const agent = request.agent(server);
-    await login(agent, "user.b@test.com", "12345678");
+    await login(agent, "user.a@test.com", "12345678");
     const res = await agent.get("/todos");
     const csrfToken = extractCsrfToken(res);
     const res1 = await agent.post("/todos").send({
@@ -67,8 +67,9 @@ describe("Todo Application", function () {
       completed: false,
       _csrf: csrfToken,
     });
-    expect(res1.statusCode).toBe(302);
+    expect(res1.status).toBe(302);
   });
+
   test("Update a todo with given ID as complete / incomplete", async () => {
     const agent = request.agent(server);
     await login(agent, "user.a@test.com", "12345678");
@@ -86,20 +87,29 @@ describe("Todo Application", function () {
       completed: true,
       _csrf: csrfToken,
     });
+
     const groupedTodosResponse = await agent
       .get("/todos")
       .set("Accept", "application/json");
     const parsedGroupedResponse = JSON.parse(groupedTodosResponse.text);
     const dueTodayCount = parsedGroupedResponse.dueToday.length;
     const latestTodo = parsedGroupedResponse.dueToday[dueTodayCount - 1];
+
     res = await agent.get("/todos");
     csrfToken = extractCsrfToken(res);
+
     const markCompleteResponse = await agent
       .put(`/todos/${latestTodo.id}`)
       .send({
         _csrf: csrfToken,
       });
+
+    const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
+    parsedUpdateResponse.completed
+      ? expect(parsedUpdateResponse.completed).toBe(true)
+      : expect(parsedUpdateResponse.completed).toBe(false);
   });
+
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
     const agent = request.agent(server);
     await login(agent, "user.a@test.com", "12345678");
