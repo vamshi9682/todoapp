@@ -54,6 +54,7 @@
     <div class="grid grid-cols-6">
         <div class="col-start-3 col-span-2">
             <%- include('header.ejs') %>
+            <p class="py-2 text-3xl text-gray-800"><%= loggedInUserName.firstName %> <%= loggedInUserName.lastName %></p>
             <div>
               
             <% if(messages && messages.error && messages.error.length > 0)  { %>

@@ -76,11 +76,14 @@ passport.deserializeUser((id, done) => {
 });
 
 app.get("/", async function (request, response) {
-  console.log(request.user);
-  response.render("index", {
-    title: "Todo application",
-    csrfToken: request.csrfToken(),
-  });
+  if (request.user) {
+    return response.redirect("/todos");
+  } else {
+    response.render("index", {
+      title: "Todo application",
+      csrfToken: request.csrfToken(),
+    });
+  }
 });
 
 app.get(
@@ -88,6 +91,7 @@ app.get(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     const loggedInUser = request.user.id;
+    const loggedInUserName = request.user;
     const allTodos = await Todo.getTodos(loggedInUser);
     const overdue = await Todo.overdue(loggedInUser);
     const dueToday = await Todo.dueToday(loggedInUser);
@@ -96,6 +100,7 @@ app.get(
     if (request.accepts("html")) {
       response.render("todos", {
         title: "Todo application",
+        loggedInUserName,
         overdue,
         dueToday,
         dueLater,
