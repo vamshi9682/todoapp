@@ -255,8 +255,12 @@ app.delete(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     try {
-      await Todo.remove(request.params.id, request.user.id);
-      return response.json(true);
+      const status = await Todo.remove(request.params.id, request.user.id);
+      if (status) {
+        return response.json(true);
+      } else {
+        return response.json(false);
+      }
     } catch (error) {
       console.log(error);
       return response.status(422).json(error);
